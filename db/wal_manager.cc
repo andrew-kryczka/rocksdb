@@ -194,6 +194,9 @@ void WalManager::PurgeObsoleteWALFiles() {
           continue;
         }
         if (now_seconds - file_m_time > db_options_.WAL_ttl_seconds) {
+          ROCKS_LOG_ERROR(db_options_.info_log,
+            "WAL TTL deletion: now_seconds (%" PRIu64 ") - file_m_time (%" PRIu64 ") = %" PRIu64 ", WAL_ttl_seconds=%" PRIu64 ", deleting file %s", now_seconds, file_m_time, now_seconds - file_m_time, db_options_.WAL_ttl_seconds, file_path.c_str());
+          db_options_.info_log->Flush();
           s = DeleteDBFile(&db_options_, file_path, archival_dir, false,
                            /*force_fg=*/!wal_in_db_path_);
           if (!s.ok()) {
@@ -221,6 +224,9 @@ void WalManager::PurgeObsoleteWALFiles() {
             log_file_size = std::max(log_file_size, file_size);
             ++log_files_num;
           } else {
+            ROCKS_LOG_ERROR(db_options_.info_log,
+              "WAL size-based deletion: file_size == 0 for file %s, WAL_size_limit_MB=%" PRIu64, file_path.c_str(), db_options_.WAL_size_limit_MB);
+            db_options_.info_log->Flush();
             s = DeleteDBFile(&db_options_, file_path, archival_dir, false,
                              /*force_fg=*/!wal_in_db_path_);
             if (!s.ok()) {

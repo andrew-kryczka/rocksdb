@@ -129,7 +129,7 @@ class WalManager {
 
   // obsolete files will be deleted every this seconds if ttl deletion is
   // enabled and archive size_limit is disabled.
-  static constexpr uint64_t kDefaultIntervalToDeleteObsoleteWAL = 600;
+  static constexpr uint64_t kDefaultIntervalToDeleteObsoleteWAL = 6;
 
   std::shared_ptr<IOTracer> io_tracer_;
 };

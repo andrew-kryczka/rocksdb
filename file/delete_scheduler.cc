@@ -60,6 +60,10 @@ DeleteScheduler::~DeleteScheduler() {
 Status DeleteScheduler::DeleteFile(const std::string& file_path,
                                    const std::string& dir_to_sync,
                                    const bool force_bg) {
+  if (file_path.find("archive") != std::string::npos) {
+    fprintf(stderr, "DeleteScheduler::DeleteFile: %s\n", file_path.c_str());
+    abort();
+  }
   uint64_t total_size = sst_file_manager_->GetTotalSize();
   if (rate_bytes_per_sec_.load() <= 0 ||
       (!force_bg &&
